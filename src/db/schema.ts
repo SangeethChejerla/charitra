@@ -13,3 +13,8 @@ export const posts = table('posts', {
     () => new Date()
   ),
 });
+
+export const views = table('views', {
+  slug: text('slug').primaryKey(),
+  count: integer('count').notNull(),
+});

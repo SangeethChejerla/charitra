@@ -1,4 +1,8 @@
+// entry/[slug]/page.tsx
+import { ViewCounter } from '@/components/ViewCounter';
 import { db } from '@/db/db';
+import { views } from '@/db/schema';
+import { sql } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 interface Params {
@@ -20,14 +24,23 @@ export default async function BlogPost({ params }: PageProps) {
     notFound();
   }
 
+  const initialViewsData = await db
+    .select()
+    .from(views)
+    .where(sql`${views.slug} = ${slug}`);
+  const initialCount = initialViewsData[0]?.count || 0;
+  const val = initialViewsData[0]?.count || 0;
+
   return (
     <article className="container py-12 md:py-20 max-w-3xl mx-auto bg-black text-white">
-      <header className="mb-12 flex justify-between items-center">
+      <header className="mb-12 flex flex-col gap-y-4 justify-between items-start">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold font-mono mb-4 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-bold font-mono tracking-tight">
             {post.title}
           </h1>
         </div>
+        {/* Pass initialCount to ViewCounter */}
+        <ViewCounter slug={slug} initialCount={initialCount} />
       </header>
 
       <div
