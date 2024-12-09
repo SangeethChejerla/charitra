@@ -7,17 +7,15 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-black text-white flex flex-col">
       <div className="w-full max-w-2xl mx-auto flex flex-col flex-grow">
-        <header className="sticky top-0 z-50 backdrop-blur-xl">
-          <div className="flex items-center justify-between px-6 h-16">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-zinc-800"
-            ></Button>
-            <h1 className="text-2xl font-bold tracking-tight">Aryayama Nyx</h1>
-            <div className="w-10"></div> {/* Spacer for symmetric layout */}
-          </div>
-        </header>
+        <div className="flex items-center justify-between px-6 h-16">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-zinc-800"
+          ></Button>
+          <h1 className="text-2xl font-bold tracking-tight">Aryayama Nyx</h1>
+          <div className="w-10"></div> {/* Spacer for symmetric layout */}
+        </div>
 
         <div className="relative aspect-[3/1] overflow-hidden">
           <Image

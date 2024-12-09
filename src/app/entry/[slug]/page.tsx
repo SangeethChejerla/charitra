@@ -1,5 +1,4 @@
 import { db } from '@/db/db';
-import { format } from 'date-fns';
 import { notFound } from 'next/navigation';
 
 interface Params {
@@ -28,15 +27,6 @@ export default async function BlogPost({ params }: PageProps) {
           <h1 className="text-3xl md:text-4xl font-bold font-mono mb-4 tracking-tight">
             {post.title}
           </h1>
-          <time
-            dateTime={post.createdAt}
-            className="text-gray-400 text-sm md:text-base block font-mono"
-          >
-            {format(new Date(post.createdAt), 'MMMM dd, yyyy')}
-          </time>
-          <p className="mt-1 text-gray-500 text-xs font-mono">
-            Published on {format(new Date(post.createdAt), 'MMMM dd, yyyy')}
-          </p>
         </div>
       </header>
 
