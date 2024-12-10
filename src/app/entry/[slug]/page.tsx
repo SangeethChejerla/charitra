@@ -2,18 +2,13 @@ import { ViewCounter } from '@/components/ViewCounter';
 import { db } from '@/db/db';
 import { views } from '@/db/schema';
 import { sql } from 'drizzle-orm';
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface Params {
   slug: string;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Params;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Params }) {
   const { slug } = await params;
 
   const post = await db.query.posts.findFirst({
@@ -38,7 +33,7 @@ export async function generateMetadata({
       description: post.description || 'Explore the latest insights and ideas',
       type: 'article',
       url: `https://sigma-chiritra.vercel.app/entry/${slug}`,
-      siteName: 'MicroMacro Blog',
+      siteName: 'Aryayama Nyx',
     },
     twitter: {
       card: 'summary',
