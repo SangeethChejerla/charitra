@@ -50,7 +50,7 @@ export async function generateMetadata({
 }
 
 export default async function BlogPost({ params }: { params: Params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const post = await db.query.posts.findFirst({
     where: (posts, { eq }) => eq(posts.slug, slug),
