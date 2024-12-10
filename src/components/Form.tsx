@@ -290,13 +290,13 @@ export default function BlogEditor() {
             onChange={(e) => setTitle(e.target.value)}
             className="text-lg"
           />
-          <Input
+          {/* <Input
             type="text"
             placeholder="Description for SEO and sharing"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="text-lg"
-          />
+          /> */}
 
           <div className="grid grid-cols-2 gap-4">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -369,7 +369,7 @@ export default function BlogEditor() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto mt-6">
+      {/* <div className="max-w-3xl mx-auto mt-6">
         <h2 className="text-xl font-bold mb-4">Metadata Preview</h2>
         <div className="bg-gray-800 p-4 rounded-lg">
           <p className="mb-2">
@@ -379,7 +379,7 @@ export default function BlogEditor() {
             <strong>Description:</strong> {metadataPreview.description}
           </p>
         </div>
-      </div>
+      </div> */}
 
       <div className="rounded-lg overflow-hidden mt-6">
         <NovelEditor

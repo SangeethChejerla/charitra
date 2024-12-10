@@ -8,43 +8,43 @@ interface Params {
   slug: string;
 }
 
-export async function generateMetadata({ params }: { params: Params }) {
-  const { slug } = params;
+// export async function generateMetadata({ params }: { params: Params }) {
+//   const { slug } = params;
 
-  const post = await db.query.posts.findFirst({
-    where: (posts, { eq }) => eq(posts.slug, slug),
-  });
+//   const post = await db.query.posts.findFirst({
+//     where: (posts, { eq }) => eq(posts.slug, slug),
+//   });
 
-  if (!post) {
-    return {
-      title: 'Post Not Found',
-      description: "This post doesn't exist.",
-    };
-  }
+//   if (!post) {
+//     return {
+//       title: 'Post Not Found',
+//       description: "This post doesn't exist.",
+//     };
+//   }
 
-  // Use the manual description from the database
-  return {
-    title: `${post.title} | Aryayama Nyx's Blog`,
-    //@ts-ignore
-    description: post.description || 'Explore the latest insights and ideas',
-    openGraph: {
-      title: `${post.title} | MicroMacro's Blog`,
-      //@ts-ignore
+//   // Use the manual description from the database
+//   return {
+//     title: `${post.title} | Aryayama Nyx's Blog`,
+//     //@ts-ignore
+//     description: post.description || 'Explore the latest insights and ideas',
+//     openGraph: {
+//       title: `${post.title} | MicroMacro's Blog`,
+//       //@ts-ignore
 
-      description: post.description || 'Explore the latest insights and ideas',
-      type: 'article',
-      url: `https://sigma-chiritra.vercel.app/entry/${slug}`,
-      siteName: 'Aryayama Nyx',
-    },
-    twitter: {
-      card: 'summary',
-      title: `${post.title} | Aryayama Nyx's Blog`,
-      //@ts-ignore
+//       description: post.description || 'Explore the latest insights and ideas',
+//       type: 'article',
+//       url: `https://sigma-chiritra.vercel.app/entry/${slug}`,
+//       siteName: 'Aryayama Nyx',
+//     },
+//     twitter: {
+//       card: 'summary',
+//       title: `${post.title} | Aryayama Nyx's Blog`,
+//       //@ts-ignore
 
-      description: post.description || 'Explore the latest insights and ideas',
-    },
-  };
-}
+//       description: post.description || 'Explore the latest insights and ideas',
+//     },
+//   };
+// }
 
 export default async function BlogPost({ params }: { params: Params }) {
   const { slug } = params;
