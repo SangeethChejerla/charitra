@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: {
   params: Params;
 }): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
 
   const post = await db.query.posts.findFirst({
     where: (posts, { eq }) => eq(posts.slug, slug),
