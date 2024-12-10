@@ -78,9 +78,7 @@ export default function NavBar() {
               <NavigationMenu>
                 <NavigationMenuList>
                   <Link href="/entry" passHref legacyBehavior>
-                    <Button asChild variant="ghost">
-                      <a>Entry</a>
-                    </Button>
+                    <a>Entry</a>
                   </Link>
                 </NavigationMenuList>
               </NavigationMenu>

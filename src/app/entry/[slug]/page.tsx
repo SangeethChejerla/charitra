@@ -1,20 +1,56 @@
-// entry/[slug]/page.tsx
 import { ViewCounter } from '@/components/ViewCounter';
 import { db } from '@/db/db';
 import { views } from '@/db/schema';
 import { sql } from 'drizzle-orm';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface Params {
   slug: string;
 }
 
-interface PageProps {
-  params: Promise<Params>;
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { slug } = params;
+
+  const post = await db.query.posts.findFirst({
+    where: (posts, { eq }) => eq(posts.slug, slug),
+  });
+
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+      description: "This post doesn't exist.",
+    };
+  }
+
+  // Use the manual description from the database
+  return {
+    title: `${post.title} | Aryayama Nyx's Blog`,
+    //@ts-ignore
+    description: post.description || 'Explore the latest insights and ideas',
+    openGraph: {
+      title: `${post.title} | MicroMacro's Blog`,
+      //@ts-ignore
+      description: post.description || 'Explore the latest insights and ideas',
+      type: 'article',
+      url: `https://sigma-chiritra.vercel.app/entry/${slug}`,
+      siteName: 'MicroMacro Blog',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${post.title} | Aryayama Nyx's Blog`,
+      //@ts-ignore
+      description: post.description || 'Explore the latest insights and ideas',
+    },
+  };
 }
 
-export default async function BlogPost({ params }: PageProps) {
-  const { slug } = await params;
+export default async function BlogPost({ params }: { params: Params }) {
+  const { slug } = params;
 
   const post = await db.query.posts.findFirst({
     where: (posts, { eq }) => eq(posts.slug, slug),
@@ -29,7 +65,6 @@ export default async function BlogPost({ params }: PageProps) {
     .from(views)
     .where(sql`${views.slug} = ${slug}`);
   const initialCount = initialViewsData[0]?.count || 0;
-  const val = initialViewsData[0]?.count || 0;
 
   return (
     <article className="container py-12 md:py-20 max-w-3xl mx-auto bg-black text-white">
@@ -39,7 +74,6 @@ export default async function BlogPost({ params }: PageProps) {
             {post.title}
           </h1>
         </div>
-        {/* Pass initialCount to ViewCounter */}
         <ViewCounter slug={slug} initialCount={initialCount} />
       </header>
 
@@ -52,8 +86,8 @@ export default async function BlogPost({ params }: PageProps) {
                    prose-ul:list-disc prose-ul:ml-6 prose-ul:my-4 prose-ul:font-mono
                    prose-ol:list-decimal prose-ol:ml-6 prose-ol:my-4 prose-ol:font-mono
                    prose-a:text-blue-400 prose-a:hover:underline
-                   prose-code:bg-gray-800 prose-code:text-gray-300 prose-code:p-1 prose-code:rounded prose-code:font-mono
-                   prose-pre:bg-gray-800 prose-pre:text-gray-300 prose-pre:p-4 prose-pre:rounded prose-pre:overflow-x-auto prose-pre:font-mono"
+                   prose-code:bg-black prose-code:text-gray-300 prose-code:p-1 prose-code:rounded prose-code:font-mono
+                   prose-pre:bg-black prose-pre:text-white prose-pre:p-4 prose-pre:rounded prose-pre:overflow-x-auto prose-pre:font-mono"
       >
         <div
           className="text-white"

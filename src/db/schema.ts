@@ -18,3 +18,17 @@ export const views = table('views', {
   slug: text('slug').primaryKey(),
   count: integer('count').notNull(),
 });
+
+export const tags = table('tags', {
+  id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+  name: text('name').notNull().unique(), // Each tag name should be unique
+});
+
+export const postTags = table('post_tags', {
+  postId: integer('post_id')
+    .notNull()
+    .references(() => posts.id),
+  tagId: integer('tag_id')
+    .notNull()
+    .references(() => tags.id),
+});

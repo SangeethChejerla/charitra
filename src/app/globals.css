@@ -69,3 +69,54 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Global styles or in a separate CSS module */
+
+/* Styling for Tabs */
+.TabsList {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+.TabsTrigger {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.TabsTrigger:hover {
+  background: linear-gradient(
+    45deg,
+    var(--primary-purple),
+    var(--secondary-pink)
+  );
+}
+
+.TabsTrigger[data-state='active'] {
+  background: var(--primary-purple);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+}
+
+/* BlogCard could use some enhancement */
+.BlogCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.BlogCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(124, 58, 237, 0.4);
+}
+
+/* Title enhancements */
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+}
