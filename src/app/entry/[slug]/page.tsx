@@ -2,21 +2,15 @@ import { ViewCounter } from '@/components/ViewCounter';
 import { db } from '@/db/db';
 import { views } from '@/db/schema';
 import { sql } from 'drizzle-orm';
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface Params {
   slug: string;
 }
 
-interface PageProps {
-  params: Params;
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Params }) {
   const { slug } = params;
+
   const post = await db.query.posts.findFirst({
     where: (posts, { eq }) => eq(posts.slug, slug),
   });
@@ -28,11 +22,15 @@ export async function generateMetadata({
     };
   }
 
+  // Use the manual description from the database
   return {
     title: `${post.title} | Aryayama Nyx's Blog`,
+    //@ts-ignore
     description: post.description || 'Explore the latest insights and ideas',
     openGraph: {
       title: `${post.title} | MicroMacro's Blog`,
+      //@ts-ignore
+
       description: post.description || 'Explore the latest insights and ideas',
       type: 'article',
       url: `https://sigma-chiritra.vercel.app/entry/${slug}`,
@@ -41,12 +39,14 @@ export async function generateMetadata({
     twitter: {
       card: 'summary',
       title: `${post.title} | Aryayama Nyx's Blog`,
+      //@ts-ignore
+
       description: post.description || 'Explore the latest insights and ideas',
     },
   };
 }
 
-export default async function BlogPost({ params }: PageProps) {
+export default async function BlogPost({ params }: { params: Params }) {
   const { slug } = params;
 
   const post = await db.query.posts.findFirst({
@@ -61,7 +61,6 @@ export default async function BlogPost({ params }: PageProps) {
     .select()
     .from(views)
     .where(sql`${views.slug} = ${slug}`);
-
   const initialCount = initialViewsData[0]?.count || 0;
 
   return (
@@ -74,6 +73,7 @@ export default async function BlogPost({ params }: PageProps) {
         </div>
         <ViewCounter slug={slug} initialCount={initialCount} />
       </header>
+
       <div
         className="prose prose-invert max-w-none text-lg text-white leading-relaxed
                    prose-img:rounded-xl prose-img:mx-auto prose-img:my-6 prose-img:block
