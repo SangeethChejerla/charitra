@@ -1,4 +1,5 @@
 import BlogCard from '@/components/BlogCard';
+import SearchInput from '@/components/SearchInput';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { db } from '@/db/db';
 import { posts, postTags, tags } from '@/db/schema';
@@ -16,13 +17,21 @@ interface Post {
   title: string;
   slug: string;
   createdAt: Date;
+  content: string | null;
 }
 
 interface PostWithTags extends Post {
   tags: Tag[];
 }
 
-export default async function BlogPage() {
+interface BlogPageProps {
+  searchParams: {
+    q?: string;
+  };
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  // 1. Fetch Data
   const allTags = await db.select().from(tags);
   const postsWithTagsResult = await db
     .select({
@@ -34,51 +43,82 @@ export default async function BlogPage() {
     .leftJoin(tags, eq(postTags.tagId, tags.id))
     .orderBy(posts.createdAt);
 
-  // Transform the data to group tags with their respective posts
-  const transformedPosts: PostWithTags[] = postsWithTagsResult.reduce(
-    (acc: PostWithTags[], row) => {
+  // 2. Transform Data
+  const transformedPosts: PostWithTags[] = postsWithTagsResult
+    .reduce((acc: PostWithTags[], row) => {
       let post = acc.find((p) => p.id === row.post.id);
 
       if (!post) {
-        //@ts-ignore
         post = {
           ...row.post,
-          createdAt: new Date(row.post.createdAt), // Convert to Date object
+          createdAt: new Date(row.post.createdAt),
           tags: [],
-        };
-        //@ts-ignore
+        } as unknown as PostWithTags;
         acc.push(post);
       }
 
-      // Only add the tag if it exists (due to leftJoin, it might be null)
       if (row.tag) {
-        //@ts-ignore
-        post.tags.push(row.tag);
+        post.tags.push(row.tag as unknown as Tag);
       }
 
       return acc;
-    },
-    []
-  );
+    }, [])
+    .reverse();
 
-  // Organize posts by tag (only tagged posts)
+  // 3. Organize Posts by Tag
   const postsByTag: Record<number, PostWithTags[]> = {};
   transformedPosts.forEach((post) => {
-    if (post.tags.length > 0) {
-      post.tags.forEach((tag) => {
-        if (!postsByTag[tag.id]) postsByTag[tag.id] = [];
-        postsByTag[tag.id].push(post);
-      });
-    }
+    post.tags.forEach((tag) => {
+      if (!postsByTag[tag.id]) postsByTag[tag.id] = [];
+      postsByTag[tag.id].push(post);
+    });
   });
+
+  // 4. Filter Posts
+  const query = (await searchParams).q || '';
+
+  // Filtering logic
+  const filteredPosts = query
+    ? transformedPosts.filter((post) => {
+        const titleMatch = post.title
+          .toLowerCase()
+          .includes(query.toLowerCase());
+        const contentMatch = post.content
+          ? (post.content as string).toLowerCase().includes(query.toLowerCase())
+          : false;
+        const headingMatch = post.content
+          ? (post.content as string)
+              .split('\n')
+              .some(
+                (line) =>
+                  line.startsWith('#') &&
+                  line.toLowerCase().includes(query.toLowerCase())
+              )
+          : false;
+
+        return titleMatch || contentMatch || headingMatch;
+      })
+    : transformedPosts;
+
+  const filteredPostsByTag: Record<number, PostWithTags[]> = {};
+  if (query) {
+    filteredPosts.forEach((post) => {
+      post.tags.forEach((tag) => {
+        if (!filteredPostsByTag[tag.id]) filteredPostsByTag[tag.id] = [];
+        filteredPostsByTag[tag.id].push(post);
+      });
+    });
+  }
 
   return (
     <section className="min-h-screen py-16 md:py-24 text-white">
       <div className="container max-w-6xl mx-auto px-4">
-        <h1 className="text-4xl md:text-5xl font-bold font-mono mb-12 text-center ">
+        <div className="flex justify-center mb-8">
+          <SearchInput />
+        </div>
+        <h1 className="text-4xl md:text-5xl font-bold font-mono mb-12 text-center">
           Entries
         </h1>
-
         <Tabs defaultValue="all" className="flex flex-col items-center">
           <TabsList className="mb-12 flex flex-wrap justify-center gap-2 TabsList">
             <TabsTrigger value="all" className="TabsTrigger">
@@ -98,7 +138,7 @@ export default async function BlogPage() {
           <div className="w-full max-w-4xl mx-auto">
             <TabsContent value="all">
               <div className="flex flex-col gap-8">
-                {transformedPosts.map((post) => (
+                {filteredPosts.map((post) => (
                   //@ts-ignore
                   <BlogCard key={post.id} post={post} className="BlogCard" />
                 ))}
@@ -108,10 +148,16 @@ export default async function BlogPage() {
             {allTags.map((tag) => (
               <TabsContent key={tag.id} value={tag.id.toString()}>
                 <div className="flex flex-col gap-8">
-                  {postsByTag[tag.id]?.map((post) => (
-                    //@ts-ignore
-                    <BlogCard key={post.id} post={post} className="BlogCard" />
-                  ))}
+                  {(filteredPostsByTag[tag.id] || postsByTag[tag.id])?.map(
+                    (post) => (
+                      <BlogCard
+                        key={post.id}
+                        //@ts-ignore
+                        post={post}
+                        className="BlogCard"
+                      />
+                    )
+                  )}
                 </div>
               </TabsContent>
             ))}

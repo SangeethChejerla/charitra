@@ -56,6 +56,7 @@ const PREDEFINED_TAGS: Tag[] = [
   { id: 4, name: 'Philosophy' },
   { id: 5, name: 'Productivity' },
   { id: 6, name: 'Other' },
+  { id: 7, name: 'Research Papers' },
 ];
 
 const DRAFT_STORAGE_KEY = 'blog-draft-content';

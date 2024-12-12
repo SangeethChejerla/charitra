@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { BadgeCheck, Calendar, Github, LinkIcon, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
-export default function Page() {
+export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white flex flex-col">
       <div className="w-full max-w-2xl mx-auto flex flex-col flex-grow">
@@ -12,8 +12,9 @@ export default function Page() {
             variant="ghost"
             size="icon"
             className="text-white hover:bg-zinc-800"
-          ></Button>
-          <h1 className="text-2xl font-bold tracking-tight">Aryayama Nyx</h1>
+          >
+            {/* You can add a hamburger icon or your logo here */}
+          </Button>
           <div className="w-10"></div> {/* Spacer for symmetric layout */}
         </div>
 
@@ -77,7 +78,7 @@ export default function Page() {
               <div className="flex items-center gap-2 bg-zinc-800 px-3 py-2 rounded-full">
                 <Github className="h-5 w-5 text-green-400" />
                 <a
-                  href="https://myanimelist.net/profile/AryayamaNyx"
+                  href="https://github.com/Aryayama-Nyx"
                   className="text-blue-300 hover:text-blue-200 text-sm transition-colors"
                 >
                   Github
