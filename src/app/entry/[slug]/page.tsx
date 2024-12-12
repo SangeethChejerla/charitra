@@ -30,12 +30,12 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${post.title} | Aryayama Nyx's Blog`,
     //@ts-ignore
-    description: post.description || 'Explore the latest insights and ideas',
+    description: `${post.description}|| Explore the latest insights and ideas`,
     openGraph: {
       title: `${post.title} | MicroMacro's Blog`,
       //@ts-ignore
 
-      description: post.description || 'Explore the latest insights and ideas',
+      description: `${post.description}|| Explore the latest insights and ideas`,
       type: 'article',
       url: `https://sigma-chiritra.vercel.app/entry/${slug}`,
       siteName: 'Aryayama Nyx',
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: `${post.title} | Aryayama Nyx's Blog`,
       //@ts-ignore
 
-      description: post.description || 'Explore the latest insights and ideas',
+      description: `${post.description}|| Explore the latest insights and ideas`,
     },
   };
 }

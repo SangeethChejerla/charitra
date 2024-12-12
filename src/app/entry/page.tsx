@@ -25,11 +25,14 @@ interface PostWithTags extends Post {
 }
 
 interface BlogPageProps {
-  searchParams: {
-    q?: string;
-  };
+  searchParams:
+    | {
+        q?: string;
+      }
+    | Promise<{
+        q?: string;
+      }>;
 }
-
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   // 1. Fetch Data
   const allTags = await db.select().from(tags);
