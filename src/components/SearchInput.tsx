@@ -44,7 +44,7 @@ export default function SearchInput() {
       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
       <Input
         type="text"
-        placeholder="Search the web privately..."
+        placeholder="Search the Keywords..."
         value={query}
         onChange={handleInputChange}
         className="w-full pl-10 pr-10 h-12 bg-white/10 border-none text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-purple-400 dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:focus:ring-gray-800"

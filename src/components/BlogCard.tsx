@@ -57,7 +57,7 @@ export default function BlogCard({ post }: BlogCardProps) {
         />
         <div className="relative h-full flex flex-col justify-between gap-6 p-6">
           <motion.h2
-            className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent"
+            className="text-4xl font-bold text-white" // Changed the color of the title
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1, duration: 0.5 }}

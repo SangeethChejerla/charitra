@@ -68,7 +68,7 @@ export default async function BlogPost({ params }: PageProps) {
   const initialCount = initialViewsData[0]?.count || 0;
 
   return (
-    <article className="container py-12 md:py-20 max-w-3xl mx-auto bg-black text-white">
+    <article className="container py-12 md:py-20 max-w-3xl mx-auto bg-black text-white px-4 sm:px-6 lg:px-8">
       <header className="mb-12 flex flex-col gap-y-4 justify-between items-start">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold font-mono tracking-tight">
@@ -83,11 +83,11 @@ export default async function BlogPost({ params }: PageProps) {
                    prose-img:rounded-xl prose-img:mx-auto prose-img:my-6 prose-img:block
                    prose-headings:font-bold prose-headings:font-mono prose-headings:text-white prose-headings:mt-8 prose-headings:mb-4
                    prose-p:my-4 prose-p:text-white prose-p:font-mono
-                   prose-blockquote:border-l-4 prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:py-2 prose-blockquote:my-6 prose-blockquote:italic
+                   prose-blockquote:border-l-4 prose-blockquote:border-white prose-blockquote:pl-4 prose-blockquote:py-2 prose-blockquote:my-6 prose-blockquote:italic
                    prose-ul:list-disc prose-ul:ml-6 prose-ul:my-4 prose-ul:font-mono
                    prose-ol:list-decimal prose-ol:ml-6 prose-ol:my-4 prose-ol:font-mono
                    prose-a:text-blue-400 prose-a:hover:underline
-                   prose-code:bg-black prose-code:text-gray-300 prose-code:p-1 prose-code:rounded prose-code:font-mono
+                   prose-code:bg-black prose-code:text-white prose-code:p-1 prose-code:rounded prose-code:font-mono
                    prose-pre:bg-black prose-pre:text-white prose-pre:p-4 prose-pre:rounded prose-pre:overflow-x-auto prose-pre:font-mono"
       >
         <div
