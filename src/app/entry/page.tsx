@@ -119,7 +119,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         <div className="flex justify-center mb-8">
           <SearchInput />
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold font-mono mb-12 text-center">
+        <h1 className="text-3xl md:text-5xl font-bold font-mono mb-12 text-center">
+          {/* Adjusted text size here */}
           Entries
         </h1>
         <Tabs defaultValue="all" className="flex flex-col items-center">
@@ -143,7 +144,15 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               <div className="flex flex-col gap-8">
                 {filteredPosts.map((post) => (
                   //@ts-ignore
-                  <BlogCard key={post.id} post={post} className="BlogCard" />
+                  <div key={post.id} className="mb-8">
+                    {' '}
+                    {/* Added margin bottom here */}
+                    <BlogCard
+                      //@ts-ignore
+                      post={post}
+                      className="BlogCard"
+                    />
+                  </div>
                 ))}
               </div>
             </TabsContent>
@@ -153,12 +162,15 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 <div className="flex flex-col gap-8">
                   {(filteredPostsByTag[tag.id] || postsByTag[tag.id])?.map(
                     (post) => (
-                      <BlogCard
-                        key={post.id}
-                        //@ts-ignore
-                        post={post}
-                        className="BlogCard"
-                      />
+                      <div key={post.id} className="mb-8">
+                        {' '}
+                        {/* Added margin bottom here */}
+                        <BlogCard
+                          //@ts-ignore
+                          post={post}
+                          className="BlogCard"
+                        />
+                      </div>
                     )
                   )}
                 </div>
