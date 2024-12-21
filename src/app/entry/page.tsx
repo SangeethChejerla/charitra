@@ -1,11 +1,10 @@
-import BlogCard from '@/components/BlogCard';
+// app/blog/page.tsx
+import CollapsibleBlogList from '@/components/collapseCard';
 import SearchInput from '@/components/SearchInput';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { db } from '@/db/db';
 import { posts, postTags, tags } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-
-export const dynamic = 'force-dynamic';
+import { cache } from 'react';
 
 interface Tag {
   id: number;
@@ -33,8 +32,8 @@ interface BlogPageProps {
         q?: string;
       }>;
 }
-export default async function BlogPage({ searchParams }: BlogPageProps) {
-  // 1. Fetch Data
+
+const getBlogData = cache(async () => {
   const allTags = await db.select().from(tags);
   const postsWithTagsResult = await db
     .select({
@@ -46,7 +45,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     .leftJoin(tags, eq(postTags.tagId, tags.id))
     .orderBy(posts.createdAt);
 
-  // 2. Transform Data
   const transformedPosts: PostWithTags[] = postsWithTagsResult
     .reduce((acc: PostWithTags[], row) => {
       let post = acc.find((p) => p.id === row.post.id);
@@ -54,7 +52,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       if (!post) {
         post = {
           ...row.post,
-          createdAt: new Date(row.post.createdAt),
+          createdAt: new Date(row.post.createdAt), // Corrected line: Ensure createdAt is a Date object
           tags: [],
         } as unknown as PostWithTags;
         acc.push(post);
@@ -66,9 +64,15 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
       return acc;
     }, [])
-    .reverse();
+    // Sort in descending order (latest first)
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-  // 3. Organize Posts by Tag
+  return { allTags, transformedPosts };
+});
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const { allTags, transformedPosts } = await getBlogData();
+
   const postsByTag: Record<number, PostWithTags[]> = {};
   transformedPosts.forEach((post) => {
     post.tags.forEach((tag) => {
@@ -77,17 +81,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     });
   });
 
-  // 4. Filter Posts
   const query = (await searchParams).q || '';
+  const lowerCaseQuery = query.toLowerCase();
 
-  // Filtering logic
   const filteredPosts = query
     ? transformedPosts.filter((post) => {
-        const titleMatch = post.title
-          .toLowerCase()
-          .includes(query.toLowerCase());
+        const titleMatch = post.title.toLowerCase().includes(lowerCaseQuery);
         const contentMatch = post.content
-          ? (post.content as string).toLowerCase().includes(query.toLowerCase())
+          ? (post.content as string).toLowerCase().includes(lowerCaseQuery)
           : false;
         const headingMatch = post.content
           ? (post.content as string)
@@ -95,7 +96,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               .some(
                 (line) =>
                   line.startsWith('#') &&
-                  line.toLowerCase().includes(query.toLowerCase())
+                  line.toLowerCase().includes(lowerCaseQuery)
               )
           : false;
 
@@ -104,80 +105,33 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     : transformedPosts;
 
   const filteredPostsByTag: Record<number, PostWithTags[]> = {};
-  if (query) {
-    filteredPosts.forEach((post) => {
-      post.tags.forEach((tag) => {
-        if (!filteredPostsByTag[tag.id]) filteredPostsByTag[tag.id] = [];
-        filteredPostsByTag[tag.id].push(post);
-      });
+  filteredPosts.forEach((post) => {
+    post.tags.forEach((tag) => {
+      if (!filteredPostsByTag[tag.id]) filteredPostsByTag[tag.id] = [];
+      filteredPostsByTag[tag.id].push(post);
     });
-  }
+  });
+
+  const allUntaggedPosts = filteredPosts.filter(
+    (post) => post.tags.length === 0
+  );
 
   return (
     <section className="min-h-screen py-16 md:py-24 text-white">
-      <div className="container max-w-6xl mx-auto px-4">
+      <div className="container max-w-4xl mx-auto px-4">
         <div className="flex justify-center mb-8">
           <SearchInput />
         </div>
         <h1 className="text-3xl md:text-5xl font-bold font-mono mb-12 text-center">
-          {/* Adjusted text size here */}
           Entries
         </h1>
-        <Tabs defaultValue="all" className="flex flex-col items-center">
-          <TabsList className="mb-12 flex flex-wrap justify-center gap-2 TabsList">
-            <TabsTrigger value="all" className="TabsTrigger">
-              All
-            </TabsTrigger>
-            {allTags.map((tag) => (
-              <TabsTrigger
-                key={tag.id}
-                value={tag.id.toString()}
-                className="TabsTrigger"
-              >
-                {tag.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          <div className="w-full max-w-4xl mx-auto">
-            <TabsContent value="all">
-              <div className="flex flex-col gap-8">
-                {filteredPosts.map((post) => (
-                  //@ts-ignore
-                  <div key={post.id} className="mb-8">
-                    {' '}
-                    {/* Added margin bottom here */}
-                    <BlogCard
-                      //@ts-ignore
-                      post={post}
-                      className="BlogCard"
-                    />
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-
-            {allTags.map((tag) => (
-              <TabsContent key={tag.id} value={tag.id.toString()}>
-                <div className="flex flex-col gap-8">
-                  {(filteredPostsByTag[tag.id] || postsByTag[tag.id])?.map(
-                    (post) => (
-                      <div key={post.id} className="mb-8">
-                        {' '}
-                        {/* Added margin bottom here */}
-                        <BlogCard
-                          //@ts-ignore
-                          post={post}
-                          className="BlogCard"
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
-              </TabsContent>
-            ))}
-          </div>
-        </Tabs>
+        <CollapsibleBlogList
+          allTags={allTags}
+          filteredPosts={filteredPosts}
+          filteredPostsByTag={filteredPostsByTag}
+          postsByTag={postsByTag}
+          allUntaggedPosts={allUntaggedPosts}
+        />
       </div>
     </section>
   );
