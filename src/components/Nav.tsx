@@ -1,9 +1,5 @@
 'use client';
 
-import {
-  NavigationMenu,
-  NavigationMenuList,
-} from '@/components/ui/navigation-menu';
 import { FileText, Home } from 'lucide-react';
 import Link from 'next/link';
 import { useMediaQuery } from 'usehooks-ts';
@@ -11,7 +7,6 @@ import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from './ui/sheet';
 
 export default function NavBar() {
-  // Use a media query to determine if the screen is smaller than 825px
   const isMobile = useMediaQuery('(max-width: 825px)');
 
   return (
@@ -57,33 +52,38 @@ export default function NavBar() {
                     <FileText className="mr-2 h-4 w-4" /> Entry
                   </Button>
                 </Link>
+                <Link href="/goals" passHref legacyBehavior>
+                  <Button
+                    variant="outline"
+                    className="w-full flex items-center justify-start"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Goals
+                  </Button>
+                </Link>
               </div>
             </SheetContent>
           </Sheet>
         )}
 
-        {/* Desktop Navigation */}
         {!isMobile && (
-          <>
-            <NavigationMenu>
-              <NavigationMenuList>
-                <Link href="/" passHref legacyBehavior>
-                  <a className="pl-2 flex items-center">
-                    <Home className="mr-2 h-4 w-4" />
-                  </a>
-                </Link>
-              </NavigationMenuList>
-            </NavigationMenu>
-            <div className="flex items-center gap-2">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <Link href="/entry" passHref legacyBehavior>
-                    <a>Entry</a>
-                  </Link>
-                </NavigationMenuList>
-              </NavigationMenu>
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center">
+              <Link href="/" passHref legacyBehavior>
+                <a className="pl-2 flex items-center">
+                  <Home className="mr-2 h-4 w-4" />
+                </a>
+              </Link>
             </div>
-          </>
+            <div className="flex items-center">
+              <Link href="/entry" passHref legacyBehavior>
+                <a>Entry</a>
+              </Link>
+              <Link href="/goals" passHref legacyBehavior>
+                <a className="ml-4">Goals</a>
+              </Link>
+            </div>
+          </div>
         )}
       </div>
     </div>

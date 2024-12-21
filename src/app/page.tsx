@@ -51,7 +51,7 @@ export default function Home() {
           </div>
 
           <div className="max-w-xl mx-auto text-center">
-            <p className="text-[16px] leading-relaxed mb-6  p-4 rounded-xl">
+            <p className="text-balance leading-relaxed mb-6  p-4 rounded-xl">
               "Suddenly, I started shaking, but not because I was cold or the
               weather was bad. It wasn't even because I was scared. I was
               probably just excited and nervous."
