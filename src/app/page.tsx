@@ -1,6 +1,7 @@
+import DirectoryTree from '@/components/DirectoryTree';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { BadgeCheck, Calendar, Github, LinkIcon, MapPin } from 'lucide-react';
+import { BadgeCheck } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Home() {
@@ -50,50 +51,12 @@ export default function Home() {
           </div>
 
           <div className="max-w-xl mx-auto text-center">
-            <p className="text-[16px] leading-relaxed text-zinc-300 italic mb-6 bg-zinc-900/50 p-4 rounded-xl">
+            <p className="text-[16px] leading-relaxed mb-6  p-4 rounded-xl">
               "Suddenly, I started shaking, but not because I was cold or the
               weather was bad. It wasn't even because I was scared. I was
               probably just excited and nervous."
             </p>
-
-            <div className="flex justify-center flex-wrap gap-4 text-zinc-400">
-              <div className="flex items-center gap-2 bg-zinc-800 px-3 py-2 rounded-full">
-                <MapPin className="h-5 w-5 text-blue-400" />
-                <span className="text-sm">Bharat</span>
-              </div>
-              <div className="flex items-center gap-2 bg-zinc-800 px-3 py-2 rounded-full">
-                <Calendar className="h-5 w-5 text-purple-400" />
-                <span className="text-sm">December 2</span>
-              </div>
-              <div className="flex items-center gap-2 bg-zinc-800 px-3 py-2 rounded-full">
-                <LinkIcon className="h-5 w-5 text-green-400" />
-                <a
-                  href="https://aryayama-nyx.vercel.app"
-                  className="text-blue-300 hover:text-blue-200 text-sm transition-colors"
-                >
-                  My Portfolio
-                </a>
-              </div>
-
-              <div className="flex items-center gap-2 bg-zinc-800 px-3 py-2 rounded-full">
-                <Github className="h-5 w-5 text-green-400" />
-                <a
-                  href="https://github.com/Aryayama-Nyx"
-                  className="text-blue-300 hover:text-blue-200 text-sm transition-colors"
-                >
-                  Github
-                </a>
-              </div>
-              <div className="flex items-center gap-2 bg-zinc-800 px-3 py-2 rounded-full">
-                <LinkIcon className="h-5 w-5 text-green-400" />
-                <a
-                  href="https://myanimelist.net/profile/AryayamaNyx"
-                  className="text-blue-300 hover:text-blue-200 text-sm transition-colors"
-                >
-                  My Anime List
-                </a>
-              </div>
-            </div>
+            <DirectoryTree />
           </div>
         </div>
       </div>
